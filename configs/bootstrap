@@ -9,5 +9,3 @@ aclocal -I config && \
    $LIBTOOLIZE --automake --force --copy && \
    automake --add-missing --copy && \
    autoconf
-
-# Taf!

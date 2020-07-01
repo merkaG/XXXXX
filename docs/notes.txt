@@ -1,0 +1,13 @@
+### Master/Slave connection
+The charge controller can function as a Master (the dedicated controller is switched into Master mode) or Slave. 
+Master/Slave operation can be configured by connecting the USB configuration interface of
+ one charge controller (Master device) to a USB interface for Ethernet/Wi-Fi® of the second charge controller (Slave device) using a USB cable.  
+One Slave can connect to the Master controller. The communication protocol is binary OCPP 1.6. Essentially the Master controller becomes the OCPP backend for the Slave controller. The Master controller exposes each Slave as an additional connector to the backend.
+A charge controller is assigned the Master and Slave role on the Manufacturer page.
+ Each Slave controller then needs to be assigned the IP address of of the Master controller as its binary OCPP hostname and needs to use port 1600 as the binary OCPP port to connect to theMaster. Multiple connectivity technologies to connect Master and Slave can be used, for example Ethernet and, where available, Wi-Fi®. The Master is assigned an additional USB address of 192.168.125.124 on the Operator configuration page without assigning a standardgateway. The Slave uses the IP 192.168.125.125 to connect to the Master. Using USB as the connection technology like this is more cost efficient than using multiple Ethernet dongles or Wi-Fi® but limits the distance of the controllers to a few meters as the maximum lengthof a USB cable is 5 meters. The Slave configuration web page (e.g. http://192.168.123.123) then offers links to access the Master and theSlave configuration...
+
+
+*******************************************************
+'Master' controller handles the backend connection and may start and stop transaction for it's slaves. 'Slave' controller connects to a master as its backend. Some other parameters are automatically modified when turning this on. 
+
+IMPORTANT NOTE: In case the ChargePoint is configured as a Slave, the ChargePointID should be suffixed by the Connector ID represented by the Slave, e.g. #002 or #5 should be appended to the ChargePointID. Note: supported is a setup with 1 master and 1 slave.   
