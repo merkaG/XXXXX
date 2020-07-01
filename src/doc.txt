@@ -1,8 +1,0 @@
-/*
-  for the moment the doc is a simple text file but after it will be in a tex|html... format
-*/
-
-
-##############
-a complete definition of where to find a piece of data requires both the address (or register number) and function code (or register type).
-##############
