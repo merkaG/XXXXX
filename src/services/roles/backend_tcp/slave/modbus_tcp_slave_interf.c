@@ -1,14 +1,21 @@
+/** 
+ *  @brief  modbus slave interface (or client interface in tcp context) 
+ *
+ *
+ */
+
+
 #include <sys/time.h> /* for the time timeval */  
 #include <modbus.h>
 #include <stdlib.h>
 #include <errno.h>
 
-#include "ethread.h" // used for threading 
+#include "thread.h" // used for threading 
 
 #include "modbus_tcp_slave_interf.h"
-#include "helpers/logging.h"
+#include "logging_utils.h"
 #include "master_slave.h"// config slave internals
-#include "string_utils.h"
+#include "str_utils.h"
 
 /* check for the context */
 #ifdef TCP
@@ -133,7 +140,7 @@ void init_modbus_tcp_pi(modbus_t *ctx){
 
 	int i = 0; 
 
-	struct ethread_info eti_listener = ETHREAD_ETI_INITIALIZER;
+	struct thread_info eti_listener = thread_ETI_INITIALIZER;
 	
 	byte_resp_timeout = malloc(sizeof(struct timeval));
 	get_byte_timeout = malloc(sizeof(struct timeval));
@@ -237,7 +244,7 @@ void init_modbus_tcp_pi(modbus_t *ctx){
 	}
 
 	/* loop for request from the master and or responses to master */
-	ethread_start(eti_listener, "listen_for_master_request", listen_for_master_request, NULL);
+	thread_start(eti_listener, "listen_for_master_request", listen_for_master_request, NULL);
 } /* end of the init_modbus function */
 
 
@@ -275,16 +282,16 @@ void listen_for_master_request(void){
 				USER_ERR("These are special registers, exiting ...");
 				break;
 			case READ_HOLDING_REGISTER: 
-				ethread_lock_thread(eti_listener);
+				thread_lock_thread(eti_listener);
 				read_value = get_slave_configuration(READ_HOLDING_REGISTER);
 				modbus_tcp_send(ctx, request);
-				ethread_unlock(eti_listener);
+				thread_unlock(eti_listener);
 				break;
 			case READ_INPUT_REGISTER: // case READ_INPUT_REGISTER
-				ethread_lock(eti_listener);
+				thread_lock(eti_listener);
 				read_value = get_slave_configuration(READ_INPUT_REGISTER);
 				modbus_tcp_send(ctx, request);
-				ethread_unlock(eti_listener);
+				thread_unlock(eti_listener);
 				break;
 			case WRITE_SINGLE_HOLDING_REGISTER: // it is a write single holding register, but how to check it out? TODO
 				set_slave_configuration(WRITE_HOLDING_REGISTER);	
@@ -395,7 +402,7 @@ static uint_t get_slave_configuration(uint_t *configuration_name){
 
 		/* Stop the listening thread, and giving it a 100 ms for cleanups
 		 * */
-		ethread_stop(eti_listener, 100);
+		thread_stop(eti_listener, 100);
 
 		/* Terminate the modbus communication
 		 * */
