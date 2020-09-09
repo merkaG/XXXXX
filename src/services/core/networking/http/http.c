@@ -7,9 +7,9 @@ typedef struct {
 	
 	
 	
-} HTTP_HANDLE
+} Http_handle;
 
-static HTTP_HANDLE 
+static Http_handle 
 http_init (void) {
 	
 	
